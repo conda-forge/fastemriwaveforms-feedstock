@@ -52,7 +52,6 @@ outputs:
         - {{ compiler('c') }}
         - {{ stdlib('c') }}
         - {{ compiler('cxx') }}
-        - libcxx-devel <19  # [osx]
         - ninja
         - cmake
         - pkg-config
