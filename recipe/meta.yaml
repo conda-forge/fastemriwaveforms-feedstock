@@ -15,6 +15,11 @@
 {% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
 {% endif %}
 
+{% if microarch_level is undefined %}
+{% set microarch_level = 1 %}
+{% endif %}
+
+
 package:
   name: {{ name|lower }}-split
   version: {{ version }}
@@ -26,10 +31,7 @@ source:
     - patches/01_few2.0_march.patch
 
 build:
-  number: {{ build }}          # [not (unix and x86_64)]
-  number: {{ build + 100 }}    # [unix and x86_64 and microarch_level == 1]
-  number: {{ build + 300 }}    # [unix and x86_64 and microarch_level == 3]
-  number: {{ build + 400 }}    # [unix and x86_64 and microarch_level == 4]
+  number: {{ build + (microarch_level | int - 1) * 100 }}
   skip: True  # [(py<310)]
 
 outputs:
@@ -97,20 +99,18 @@ outputs:
         - tqdm
         - wrapt
         - _x86_64-microarch-level {{ microarch_level }}  # [unix and x86_64 and microarch_level == 4]
-{% if microarch_level < 4 %}
     test:
       imports:
-        - few
-        - few.tests
-        - few_backend_cpu
+        - few  # [microarch_level < 4]
+        - few.tests  # [microarch_level < 4]
+        - few_backend_cpu  # [microarch_level < 4]
       requires:
-        - pip
+        - pip  # [microarch_level < 4]
       commands:
         - pip check
-        - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms') == '{{ version }}'"
-        - python -c "import few; few.get_backend('cpu')"
-        - python -m few.tests --disable testfile
-{% endif %}
+        - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms') == '{{ version }}'"  # [microarch_level < 4]
+        - python -c "import few; few.get_backend('cpu')"  # [microarch_level < 4]
+        - python -m few.tests --disable testfile  # [microarch_level < 4]
     about:
       home: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
       summary: 'Blazingly fast EMRI waveforms'
