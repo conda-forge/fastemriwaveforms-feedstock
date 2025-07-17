@@ -102,7 +102,7 @@ outputs:
       license: GPL-3.0-or-later
       license_family: GPL
       license_file: LICENSE
-      doc_url: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+      doc_url: https://fastemriwaveforms.readthedocs.io/en/v{{ version }}/
       dev_url: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
   - name: fastemriwaveforms-cuda12x
@@ -192,7 +192,7 @@ outputs:
       license: GPL-3.0-or-later
       license_family: GPL
       license_file: LICENSE
-      doc_url: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+      doc_url: https://fastemriwaveforms.readthedocs.io/en/v{{ version }}/
       dev_url: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
 about:
@@ -204,7 +204,7 @@ about:
   license: GPL-3.0-or-later
   license_family: GPL
   license_file: LICENSE
-  doc_url: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+  doc_url: https://fastemriwaveforms.readthedocs.io/en/v{{ version }}/
   dev_url: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
 extra:
