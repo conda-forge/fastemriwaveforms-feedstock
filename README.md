@@ -15,7 +15,7 @@ Summary: Blazingly fast EMRI waveforms
 
 Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
-Documentation: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.0.0/
 
 This package contains the highly modular framework for fast and accurate extreme mass ratio
 inspiral (EMRI) waveforms.
@@ -32,7 +32,7 @@ Summary: Blazingly fast EMRI waveforms
 
 Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
-Documentation: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.0.0/
 
 This package contains the highly modular framework for fast and accurate extreme mass ratio
 inspiral (EMRI) waveforms. This is the core package with only CPU support
@@ -50,7 +50,7 @@ Summary: Blazingly fast EMRI waveforms
 
 Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
-Documentation: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.0.0/
 
 This package contains the highly modular framework for fast and accurate extreme mass ratio
 inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
@@ -117,6 +117,90 @@ Current build status
                 </a>
               </td>
             </tr><tr>
+              <td>linux_aarch64_c_compiler_version13cxx_compiler_version13python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13cxx_compiler_version13python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version13cxx_compiler_version13python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13cxx_compiler_version13python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version13cxx_compiler_version13python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13cxx_compiler_version13python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version14cxx_compiler_version14python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version14cxx_compiler_version14python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version14cxx_compiler_version14python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version14cxx_compiler_version14python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version14cxx_compiler_version14python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version14cxx_compiler_version14python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_c_compiler_version12cxx_compiler_version12python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_c_compiler_version12cxx_compiler_version12python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_c_compiler_version12cxx_compiler_version12python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_c_compiler_version12cxx_compiler_version12python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_c_compiler_version12cxx_compiler_version12python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_c_compiler_version12cxx_compiler_version12python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_c_compiler_version14cxx_compiler_version14python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_c_compiler_version14cxx_compiler_version14python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_c_compiler_version14cxx_compiler_version14python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_c_compiler_version14cxx_compiler_version14python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_c_compiler_version14cxx_compiler_version14python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_c_compiler_version14cxx_compiler_version14python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
               <td>osx_64_python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
@@ -135,6 +219,27 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
