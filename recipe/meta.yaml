@@ -24,7 +24,7 @@ outputs:
   - name: fastemriwaveforms
     version: {{ version }}
     build:
-      skip: true  # [(py<310) or (cuda_compiler == "nvcc")]
+      skip: true  # [(py<310)]
       script_env:
         - SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
       script:
