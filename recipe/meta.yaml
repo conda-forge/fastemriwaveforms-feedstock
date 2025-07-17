@@ -8,6 +8,12 @@
 {% set RECIPE_DIR = "$RECIPE_DIR/" %}
 {% set RECIPE_DIR = "%RECIPE_DIR%\\" %}  # [win]
 
+{% if cuda_compiler_version in (None, "None", True, False) %}
+{% set cuda_major = 0 %}
+{% else %}
+{% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
+{% endif %}
+
 package:
   name: {{ name|lower }}-split
   version: {{ version }}
@@ -17,14 +23,14 @@ source:
   sha256: d5c8bcba1ec24cb71be8a293f75cf1491e2e474515c1481559a4ef07378e0c36
 
 build:
-  number: 0
+  number: 1
   skip: True  # [(py<310)]
 
 outputs:
   - name: fastemriwaveforms
     version: {{ version }}
     build:
-      skip: true  # [(py<310) or (cuda_compiler == "nvcc")]
+      skip: true  # [(py<310)]
       script_env:
         - SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
       script:
@@ -46,7 +52,6 @@ outputs:
         - {{ compiler('c') }}
         - {{ stdlib('c') }}
         - {{ compiler('cxx') }}
-        - libcxx-devel <19  # [osx]
         - ninja
         - cmake
         - pkg-config
@@ -102,13 +107,13 @@ outputs:
       license: GPL-3.0-or-later
       license_family: GPL
       license_file: LICENSE
-      doc_url: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+      doc_url: https://fastemriwaveforms.readthedocs.io/en/v{{ version }}/
       dev_url: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
   - name: fastemriwaveforms-cuda12x
     version: {{ version }}
     build:
-      skip: true  # [(py<310) or (cuda_compiler != "cuda-nvcc") or not linux]
+      skip: true  # [(py<310) or (cuda_major == 0) or not linux]
       script_env:
         - SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
       script:
@@ -139,7 +144,7 @@ outputs:
         - ninja
         - cmake
         - make
-        - cuda-version {{ cuda_compiler_version }}  # [build_platform != target_platform]
+        - cuda-version {{ cuda_compiler_version }}  # [build_platform != target_platform and cuda_major != 0]
         - cuda-driver-dev                           # [build_platform != target_platform and linux]
         - cuda-cudart-dev                           # [build_platform != target_platform]
         - cuda-nvrtc-dev                            # [build_platform != target_platform]
@@ -156,7 +161,7 @@ outputs:
         - numpy
         - tomli
         - tomli-w
-        - cuda-version {{ cuda_compiler_version }}
+        - cuda-version {{ cuda_compiler_version }}  # [cuda_major != 0]
         - cuda-driver-dev
         - cuda-cudart-dev
         - libcublas-dev
@@ -192,7 +197,7 @@ outputs:
       license: GPL-3.0-or-later
       license_family: GPL
       license_file: LICENSE
-      doc_url: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+      doc_url: https://fastemriwaveforms.readthedocs.io/en/v{{ version }}/
       dev_url: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
 about:
@@ -204,7 +209,7 @@ about:
   license: GPL-3.0-or-later
   license_family: GPL
   license_file: LICENSE
-  doc_url: https://bhptoolkit.org/FastEMRIWaveforms/html/index.html
+  doc_url: https://fastemriwaveforms.readthedocs.io/en/v{{ version }}/
   dev_url: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
 extra:
