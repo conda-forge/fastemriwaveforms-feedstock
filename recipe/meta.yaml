@@ -19,6 +19,11 @@
 {% set microarch_level = 1 %}
 {% endif %}
 
+{% set build_with_microarch = build + 100 %}  # [microarch_level == 1]
+{% set build_with_microarch = build + 300 %}  # [microarch_level == 3]
+{% set build_with_microarch = build + 400 %}  # [microarch_level == 4]
+
+
 
 package:
   name: {{ name|lower }}-split
@@ -31,7 +36,7 @@ source:
     - patches/01_few2.0_march.patch
 
 build:
-  number: {{ build + (microarch_level | int - 1) * 100 }}
+  number: {{ build_with_microarch }}
   skip: True  # [(py<310)]
 
 outputs:
