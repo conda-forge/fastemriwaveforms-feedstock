@@ -8,6 +8,12 @@
 {% set RECIPE_DIR = "$RECIPE_DIR/" %}
 {% set RECIPE_DIR = "%RECIPE_DIR%\\" %}  # [win]
 
+{% if cuda_compiler_version in (None, "None", True, False) %}
+{% set cuda_major = 0 %}
+{% else %}
+{% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
+{% endif %}
+
 package:
   name: {{ name|lower }}-split
   version: {{ version }}
@@ -108,7 +114,7 @@ outputs:
   - name: fastemriwaveforms-cuda12x
     version: {{ version }}
     build:
-      skip: true  # [(py<310) or (cuda_compiler != "cuda-nvcc") or not linux]
+      skip: true  # [(py<310) or (cuda_major == 0) or not linux]
       script_env:
         - SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
       script:
@@ -139,7 +145,7 @@ outputs:
         - ninja
         - cmake
         - make
-        - cuda-version {{ cuda_compiler_version }}  # [build_platform != target_platform]
+        - cuda-version {{ cuda_compiler_version }}  # [build_platform != target_platform and cuda_major != 0]
         - cuda-driver-dev                           # [build_platform != target_platform and linux]
         - cuda-cudart-dev                           # [build_platform != target_platform]
         - cuda-nvrtc-dev                            # [build_platform != target_platform]
@@ -156,7 +162,7 @@ outputs:
         - numpy
         - tomli
         - tomli-w
-        - cuda-version {{ cuda_compiler_version }}
+        - cuda-version {{ cuda_compiler_version }}  # [cuda_major != 0]
         - cuda-driver-dev
         - cuda-cudart-dev
         - libcublas-dev
