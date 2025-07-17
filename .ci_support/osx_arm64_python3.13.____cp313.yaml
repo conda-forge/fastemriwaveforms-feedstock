@@ -28,6 +28,8 @@ liblapacke:
 - 3.9.* *netlib
 macos_machine:
 - arm64-apple-darwin20.0.0
+microarch_level:
+- '1'
 numpy:
 - '2'
 pin_run_as_build:
