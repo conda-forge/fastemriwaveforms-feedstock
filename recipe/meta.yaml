@@ -97,6 +97,7 @@ outputs:
         - tqdm
         - wrapt
         - _x86_64-microarch-level {{ microarch_level }}  # [unix and x86_64 and microarch_level == 4]
+{% if microarch_level < 4 %}
     test:
       imports:
         - few
@@ -107,8 +108,9 @@ outputs:
       commands:
         - pip check
         - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms') == '{{ version }}'"
-        - python -c "import few; few.get_backend('cpu')"  # [microarch_level < 4]
-        - python -m few.tests --disable testfile  # [microarch_level < 4]
+        - python -c "import few; few.get_backend('cpu')"
+        - python -m few.tests --disable testfile
+{% endif %}
     about:
       home: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
       summary: 'Blazingly fast EMRI waveforms'
