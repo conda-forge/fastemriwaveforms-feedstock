@@ -107,7 +107,7 @@ outputs:
       requires:
         - pip  # [microarch_level < 4]
       commands:
-        - pip check
+        - pip check  # [microarch_level < 4]
         - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms') == '{{ version }}'"  # [microarch_level < 4]
         - python -c "import few; few.get_backend('cpu')"  # [microarch_level < 4]
         - python -m few.tests --disable testfile  # [microarch_level < 4]
