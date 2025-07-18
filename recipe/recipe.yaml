@@ -34,7 +34,7 @@ outputs:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
         content:
-          - ${{ PYTHON }} -m pip install . -vv -Ccmake.define.FEW_LAPACKE_FETCH=OFF -Ccmake.define.FEW_WITH_GPU=OFF -Ccmake.define.FEW_LAPACKE_DETECT_WITH=PKGCONFIG ${{ microarch_option}}
+          - ${{ PYTHON }} -m pip install . -vv -Ccmake.define.FEW_LAPACKE_FETCH=OFF -Ccmake.define.FEW_WITH_GPU=OFF -Ccmake.define.FEW_LAPACKE_DETECT_WITH=PKGCONFIG ${{ microarch_option }}
       python:
         entry_points:
           - few_citations = few.cmd.citations:main
@@ -231,4 +231,3 @@ extra:
   recipe-maintainers:
     - cchapmanbird
     - mpigou
-
