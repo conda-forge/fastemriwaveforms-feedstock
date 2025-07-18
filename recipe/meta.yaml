@@ -188,7 +188,7 @@ outputs:
 
       run:
         - python
-        - {{ pin_subpackage('fastemriwaveforms', exact=True) }}
+        - {{ pin_subpackage('fastemriwaveforms', min_pin='x.x.x', max_pin='x.x.x') }}
         - {{ pin_compatible('cuda-version', max_pin='x', min_pin='x') }}
         - cupy
         - cuda-cudart
