@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: FastEMRIWaveforms
   version: 2.0.0
-  build: 6
+  build: 7
   RECIPE_DIR: ${{ env.get("RECIPE_DIR", default=".") }}
   cuda_major: ${{ env.get("cuda_compiler_version", default="0.0") | split(".") | first | int }}
   microarch_level: ${{ 1 if microarch_level is undefined else microarch_level }}
@@ -59,7 +59,7 @@ outputs:
         - pkg-config
         - make
         - if: unix and x86_64 and microarch_level < 4
-          then: x86_64-microarch-level 1.*
+          then: x86_64-microarch-level ${{ microarch_level }}.*
       host:
         - python
         - pip
@@ -91,7 +91,7 @@ outputs:
         - tqdm
         - wrapt
         - if: unix and x86_64 and microarch_level == 4
-          then: _x86_64-microarch-level 4.*
+          then: _x86_64-microarch-level >=${{ microarch_level }}
     tests:
       - if: microarch_level < 4
         then:
