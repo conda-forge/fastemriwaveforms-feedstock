@@ -1,6 +1,6 @@
 {% set name = "FastEMRIWaveforms" %}
 {% set version = "2.0.0" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 {% set PYTHON = "python" %}
 {% set PYTHON = "$PREFIX/bin/python" %}  # [linux]
@@ -10,7 +10,7 @@
 {% set RECIPE_DIR = "%RECIPE_DIR%\\" %}  # [win]
 
 {% if cuda_compiler_version in (None, "None", True, False) %}
-{% set cuda_major = 0 %}
+{% set cuda_major = 0 | int %}
 {% else %}
 {% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
 {% endif %}
@@ -132,7 +132,7 @@ outputs:
   - name: fastemriwaveforms-cuda12x
     version: {{ version }}
     build:
-      skip: true  # [(py<310) or (cuda_major == 0) or not linux or (microarch_level != 1)]
+      skip: true  # [(py<310) or (cuda_compiler_version in (None, 'None')) or not linux or (microarch_level != 1)]
       script_env:
         - SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
       script:
