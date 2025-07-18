@@ -132,7 +132,7 @@ outputs:
   - name: fastemriwaveforms-cuda12x
     version: {{ version }}
     build:
-      skip: true  # [(py<310) or (cuda_compiler_version != None) or not linux]
+      skip: true  # [(py<310) or (cuda_compiler_version in (None, 'None')) or not linux]
       script_env:
         - SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
       script:
