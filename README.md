@@ -39,6 +39,24 @@ inspiral (EMRI) waveforms. This is the core package with only CPU support
 for waveform generation.
 
 
+About fastemriwaveforms-cuda12x
+-------------------------------
+
+Home: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
+
+Package license: GPL-3.0-or-later
+
+Summary: Blazingly fast EMRI waveforms
+
+Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
+
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.0.0/
+
+This package contains the highly modular framework for fast and accurate extreme mass ratio
+inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
+to the waveform generation.
+
+
 Current build status
 ====================
 
@@ -518,6 +536,7 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-fastemriwaveforms-green.svg)](https://anaconda.org/conda-forge/fastemriwaveforms) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/fastemriwaveforms.svg)](https://anaconda.org/conda-forge/fastemriwaveforms) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/fastemriwaveforms.svg)](https://anaconda.org/conda-forge/fastemriwaveforms) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/fastemriwaveforms.svg)](https://anaconda.org/conda-forge/fastemriwaveforms) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-fastemriwaveforms--cuda12x-green.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda12x) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/fastemriwaveforms-cuda12x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda12x) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/fastemriwaveforms-cuda12x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda12x) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/fastemriwaveforms-cuda12x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda12x) |
 
 Installing fastemriwaveforms
 ============================
@@ -529,16 +548,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `fastemriwaveforms` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `fastemriwaveforms, fastemriwaveforms-cuda12x` can be installed with `conda`:
 
 ```
-conda install fastemriwaveforms
+conda install fastemriwaveforms fastemriwaveforms-cuda12x
 ```
 
 or with `mamba`:
 
 ```
-mamba install fastemriwaveforms
+mamba install fastemriwaveforms fastemriwaveforms-cuda12x
 ```
 
 It is possible to list all of the versions of `fastemriwaveforms` available on your platform with `conda`:
