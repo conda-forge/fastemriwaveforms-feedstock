@@ -3,12 +3,12 @@ schema_version: 1
 context:
   name: FastEMRIWaveforms
   version: 2.0.0
-  build: 7
+  build: 8
   RECIPE_DIR: ${{ env.get("RECIPE_DIR", default=".") }}
   cuda_major: ${{ env.get("cuda_compiler_version", default="0.0") | split(".") | first | int }}
   microarch_level: ${{ 1 if microarch_level is undefined else microarch_level }}
   build_with_microarch: ${{ build + (microarch_level * 100) | int }}
-  microarch_option: ${{ "-Ccmake.define.FEW_MARCH=x86-64-v" ~ microarch_level if (unix and x86_64) else "" }}
+  microarch_option: ${{ ("-Ccmake.define.FEW_MARCH=x86-64-v" ~ microarch_level if (microarch_level | int) > 1 else "-Ccmake.define.FEW_MARCH=x86-64")  if (unix and x86_64) else "" }}
 
 recipe:
   name: ${{ name|lower }}-split
@@ -34,7 +34,12 @@ outputs:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
         content:
-          - ${{ PYTHON }} -m pip install . -vv -Ccmake.define.FEW_LAPACKE_FETCH=OFF -Ccmake.define.FEW_WITH_GPU=OFF -Ccmake.define.FEW_LAPACKE_DETECT_WITH=PKGCONFIG ${{ microarch_option }}
+          - >-
+            ${{ PYTHON }} -m pip install . -vv
+            -Ccmake.define.FEW_LAPACKE_FETCH=OFF
+            -Ccmake.define.FEW_WITH_GPU=OFF
+            -Ccmake.define.FEW_LAPACKE_DETECT_WITH=PKGCONFIG
+            ${{ microarch_option }}
       python:
         entry_points:
           - few_citations = few.cmd.citations:main
@@ -123,14 +128,19 @@ outputs:
       name: fastemriwaveforms-cuda12x
       version: ${{ version }}
     build:
-      skip: (match(python, "<3.10")) or (cuda_compiler_version in (None, 'None')) or not linux or (microarch_level != 1)
+      skip: (match(python, "<3.10")) or (cuda_compiler_version in (None, 'None')) or not linux
       script:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
         content:
           - sed -i'' -e '/@SKIP_PLUGIN@/d' pyproject.toml
           - ${{ PYTHON }} ${{ RECIPE_DIR }}/update_name.py fastemriwaveforms-cuda12x
-          - ${{ PYTHON }} -m pip install . -vv -Ccmake.define.FEW_LAPACKE_FETCH=OFF -Ccmake.define.FEW_WITH_GPU=ONLY -Ccmake.define.FEW_CUDA_ARCH=all
+          - >-
+            ${{ PYTHON }} -m pip install . -vv
+            -Ccmake.define.FEW_LAPACKE_FETCH=OFF
+            -Ccmake.define.FEW_WITH_GPU=ONLY
+            -Ccmake.define.FEW_CUDA_ARCH=all
+            ${{ microarch_option }}
     requirements:
       build:
         - ${{ compiler('c') }}
