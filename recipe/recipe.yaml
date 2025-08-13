@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: FastEMRIWaveforms
   version: 2.0.0
-  build: 8
+  build: 9
   RECIPE_DIR: ${{ env.get("RECIPE_DIR", default=".") }}
   cuda_major: ${{ env.get("cuda_compiler_version", default="0.0") | split(".") | first | int }}
   microarch_level: ${{ 1 if microarch_level is undefined else microarch_level }}
@@ -148,7 +148,7 @@ outputs:
         - ${{ compiler('cxx') }}
         - ${{ compiler('cuda') }}
         - if: build_platform != target_platform
-          then: 
+          then:
             - python
             - cross-python_${{ target_platform }}
             - scikit-build-core
@@ -158,12 +158,12 @@ outputs:
         - ninja
         - cmake
         - make
-        - if: build_platform != target_platform and cuda_major != 0
-          then: cuda-version ${{ cuda_compiler_version }}
-        - if: build_platform != target_platform and linux
-          then: cuda-driver-dev
         - if: build_platform != target_platform
           then:
+            - if: cuda_major != 0
+              then: cuda-version ${{ cuda_compiler_version }}
+            - if: linux
+              then: cuda-driver-dev
             - cuda-cudart-dev
             - cuda-nvrtc-dev
             - libcublas-dev
