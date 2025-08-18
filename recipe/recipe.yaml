@@ -139,7 +139,7 @@ outputs:
             ${{ PYTHON }} -m pip install . -vv
             -Ccmake.define.FEW_LAPACKE_FETCH=OFF
             -Ccmake.define.FEW_WITH_GPU=ONLY
-            -Ccmake.define.FEW_CUDA_ARCH="${CUDAARCHS}"
+            -Ccmake.define.FEW_CUDA_ARCH="${CUDAARCHS:-all-major}"
             ${{ microarch_option }}
     requirements:
       build:
