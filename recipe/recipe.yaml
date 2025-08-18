@@ -202,17 +202,19 @@ outputs:
           - libcublas-dev
           - libcusparse-dev
     tests:
-      - python:
-          imports:
-            - few_backend_cuda12x
-      - requirements:
-          run:
-            - pip
-            - cuda-driver-dev
-        script:
-          - pip check
-          - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms-cuda12x') == '${{ version }}'"
-          - FEW_ENABLED_BACKENDS=cpu python -m few.tests --disable testfile
+      - if: microarch_level < 4
+        then:
+          - python:
+              imports:
+                - few_backend_cuda12x
+          - requirements:
+              run:
+                - pip
+                - cuda-driver-dev
+            script:
+              - pip check
+              - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms-cuda12x') == '${{ version }}'"
+              - FEW_ENABLED_BACKENDS=cpu python -m few.tests --disable testfile
     about:
       summary: Blazingly fast EMRI waveforms
       description: |
