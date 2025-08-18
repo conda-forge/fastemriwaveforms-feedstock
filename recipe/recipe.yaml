@@ -19,6 +19,7 @@ source:
   sha256: d5c8bcba1ec24cb71be8a293f75cf1491e2e474515c1481559a4ef07378e0c36
   patches:
     - patches/01_few2.0_march.patch
+    - patches/02_few_display_cmake_options.patch
 
 build:
   number: ${{ build_with_microarch }}
