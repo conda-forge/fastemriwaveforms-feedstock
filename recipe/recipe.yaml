@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: FastEMRIWaveforms
   version: 2.0.0
-  build: 8
+  build: 9
   RECIPE_DIR: ${{ env.get("RECIPE_DIR", default=".") }}
   cuda_major: ${{ env.get("cuda_compiler_version", default="0.0") | split(".") | first | int }}
   microarch_level: ${{ 1 if microarch_level is undefined else microarch_level }}
@@ -19,6 +19,7 @@ source:
   sha256: d5c8bcba1ec24cb71be8a293f75cf1491e2e474515c1481559a4ef07378e0c36
   patches:
     - patches/01_few2.0_march.patch
+    - patches/02_few_display_cmake_options.patch
 
 build:
   number: ${{ build_with_microarch }}
@@ -139,7 +140,7 @@ outputs:
             ${{ PYTHON }} -m pip install . -vv
             -Ccmake.define.FEW_LAPACKE_FETCH=OFF
             -Ccmake.define.FEW_WITH_GPU=ONLY
-            -Ccmake.define.FEW_CUDA_ARCH=all
+            -Ccmake.define.FEW_CUDA_ARCH="${CUDAARCHS:-all-major}"
             ${{ microarch_option }}
     requirements:
       build:
@@ -202,17 +203,19 @@ outputs:
           - libcublas-dev
           - libcusparse-dev
     tests:
-      - python:
-          imports:
-            - few_backend_cuda12x
-      - requirements:
-          run:
-            - pip
-            - cuda-driver-dev
-        script:
-          - pip check
-          - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms-cuda12x') == '${{ version }}'"
-          - FEW_ENABLED_BACKENDS=cpu python -m few.tests --disable testfile
+      - if: microarch_level < 4
+        then:
+          - python:
+              imports:
+                - few_backend_cuda12x
+          - requirements:
+              run:
+                - pip
+                - cuda-driver-dev
+            script:
+              - pip check
+              - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms-cuda12x') == '${{ version }}'"
+              - FEW_ENABLED_BACKENDS=cpu python -m few.tests --disable testfile
     about:
       summary: Blazingly fast EMRI waveforms
       description: |
