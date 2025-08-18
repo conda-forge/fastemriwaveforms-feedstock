@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 666d04a..f87eff7 100644
+index 666d04a..bfa7ef3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -14,6 +14,9 @@ find_package(Python COMPONENTS Interpreter Development.Module NumPy REQUIRED)
@@ -48,23 +48,31 @@ index 666d04a..f87eff7 100644
  
  # FEW_LAPACKE_EXTRA_LIBS sets extra libraries that must be linked when linking
  # LAPACKE. For example, if importing the CPU backend fails and complains about
-@@ -169,3 +177,19 @@ if(SKBUILD_STATE STREQUAL "sdist" OR SKBUILD_STATE STREQUAL "wheel")
+@@ -82,6 +90,7 @@ endif()
+ set(FEW_LAPACKE_EXTRA_LIBS "${DEFAULT_EXTRA_LIBS}"
+     CACHE STRING "Extra libs to link to when\
+ linking against LAPACKE.")
++set_property(GLOBAL APPEND PROPERTY FEW_OPTION_NAMES FEW_LAPACKE_EXTRA_LIBS)
+ unset(GFORTRAN_AVAILABLE)
+ unset(DEFAULT_EXTRA_LIBS)
+ 
+@@ -169,3 +178,19 @@ if(SKBUILD_STATE STREQUAL "sdist" OR SKBUILD_STATE STREQUAL "wheel")
      install(FILES CITATION.cff DESTINATION few)
    endif()
  endif()
 +
 +# ---- Print the list of options used for this build ----
 +get_property(ALL_FEW_OPTION_NAMES GLOBAL PROPERTY FEW_OPTION_NAMES)
-+if(ALL_FEW_OPTION_NAMES)
-+  message(STATUS "FEW options used for this build:")
-+  foreach(few_option_name ${ALL_FEW_OPTION_NAMES})
-+    get_property(FEW_OPTION_VALUE CACHE ${few_option_name} PROPERTY VALUE)
-+    if(FEW_OPTION_VALUE)
-+      message(STATUS "  ${few_option_name}: ${FEW_OPTION_VALUE}")
-+    else()
-+      message(STATUS "  ${few_option_name}: not set")
-+    endif()
-+  endforeach()
-+else()
-+  message(STATUS "No FEW options were set for this build.")
-+endif()
++
++# We assume here that:
++#
++# 1. The list of options is not empty (at least one FEW option was registered)
++# 2. All registered options exist as cache variables (since they are all defined
++#    in this same file before being registered)
++# 3. All cache variables have values (CMake cache variables always have a value,
++#    even if it's an empty string)
++message(STATUS "FEW options used for this build:")
++foreach(few_option_name ${ALL_FEW_OPTION_NAMES})
++  get_property(FEW_OPTION_VALUE CACHE ${few_option_name} PROPERTY VALUE)
++  message(STATUS "  ${few_option_name}: ${FEW_OPTION_VALUE}")
++endforeach()
