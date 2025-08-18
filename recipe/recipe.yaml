@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: FastEMRIWaveforms
   version: 2.0.0
-  build: 9
+  build: 10
   RECIPE_DIR: ${{ env.get("RECIPE_DIR", default=".") }}
   cuda_major: ${{ env.get("cuda_compiler_version", default="0.0") | split(".") | first | int }}
   microarch_level: ${{ 1 if microarch_level is undefined else microarch_level }}
@@ -129,7 +129,7 @@ outputs:
       name: fastemriwaveforms-cuda12x
       version: ${{ version }}
     build:
-      skip: (match(python, "<3.10")) or (cuda_compiler_version in (None, 'None')) or not linux
+      skip: (match(python, "<3.10")) or (cuda_compiler_version in (None, 'None')) or not linux or ppc64le
       script:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
