@@ -23,14 +23,14 @@ source:
 
 build:
   number: ${{ build_with_microarch }}
-  skip: (match(python, "<3.10"))
+  skip: (match(python, "<3.12"))
 
 outputs:
   - package:
       name: fastemriwaveforms
       version: ${{ version }}
     build:
-      skip: (match(python, "<3.10"))
+      skip: (match(python, "<3.12"))
       script:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
@@ -78,8 +78,6 @@ outputs:
         - libtmglib
       run:
         - python
-        - if: match(python, "<3.11")
-          then: exceptiongroup
         - h5py
         - jsonschema
         - liblapacke
@@ -120,7 +118,7 @@ outputs:
         This package contains the highly modular framework for fast and accurate extreme mass ratio
         inspiral (EMRI) waveforms. This is the core package with only CPU support
         for waveform generation.
-      license: GPL-3.0-or-later
+      license: MIT
       license_file: LICENSE
       homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
       repository: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
@@ -142,7 +140,7 @@ outputs:
       # few_backend_cuda13x into a package named ...-cuda12x). Drop "13.0"
       # from this list once a FEW release supports CUDA 13; see the
       # fastemriwaveforms-cuda13x output that will need adding alongside it.
-      skip: (match(python, "<3.10")) or not linux or ppc64le or ((cuda_compiler_version | default("None")) in ("None", "13.0"))
+      skip: (match(python, "<3.12")) or not linux or ppc64le or ((cuda_compiler_version | default("None")) in ("None", "13.0"))
       script:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
@@ -235,7 +233,7 @@ outputs:
         This package contains the highly modular framework for fast and accurate extreme mass ratio
         inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
         to the waveform generation.
-      license: GPL-3.0-or-later
+      license: MIT
       license_file: LICENSE
       homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
       repository: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
@@ -246,7 +244,7 @@ about:
   description: |
     This package contains the highly modular framework for fast and accurate extreme mass ratio
     inspiral (EMRI) waveforms.
-  license: GPL-3.0-or-later
+  license: MIT
   license_file: LICENSE
   homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
   repository: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
