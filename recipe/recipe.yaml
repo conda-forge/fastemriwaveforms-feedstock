@@ -2,8 +2,8 @@ schema_version: 1
 
 context:
   name: FastEMRIWaveforms
-  version: 2.0.0
-  build: 13
+  version: "2.1.0"
+  build: 0
   RECIPE_DIR: ${{ env.get("RECIPE_DIR", default=".") }}
   cuda_major: ${{ env.get("cuda_compiler_version", default="0.0") | split(".") | first | int }}
   microarch_level: ${{ 1 if microarch_level is undefined else microarch_level | int }}
@@ -16,21 +16,21 @@ recipe:
 
 source:
   url: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: d5c8bcba1ec24cb71be8a293f75cf1491e2e474515c1481559a4ef07378e0c36
+  sha256: afe4fff975e64c38f5866a9d6a186fe68fad260087e6634a1d173082fd6ad14d
   patches:
     - patches/01_few2.0_march.patch
     - patches/02_few_display_cmake_options.patch
 
 build:
   number: ${{ build_with_microarch }}
-  skip: (match(python, "<3.10"))
+  skip: (match(python, "<3.12"))
 
 outputs:
   - package:
       name: fastemriwaveforms
       version: ${{ version }}
     build:
-      skip: (match(python, "<3.10"))
+      skip: (match(python, "<3.12"))
       script:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
@@ -78,8 +78,6 @@ outputs:
         - libtmglib
       run:
         - python
-        - if: match(python, "<3.11")
-          then: exceptiongroup
         - h5py
         - jsonschema
         - liblapacke
@@ -120,7 +118,7 @@ outputs:
         This package contains the highly modular framework for fast and accurate extreme mass ratio
         inspiral (EMRI) waveforms. This is the core package with only CPU support
         for waveform generation.
-      license: GPL-3.0-or-later
+      license: MIT
       license_file: LICENSE
       homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
       repository: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
@@ -142,7 +140,7 @@ outputs:
       # few_backend_cuda13x into a package named ...-cuda12x). Drop "13.0"
       # from this list once a FEW release supports CUDA 13; see the
       # fastemriwaveforms-cuda13x output that will need adding alongside it.
-      skip: (match(python, "<3.10")) or not linux or ppc64le or ((cuda_compiler_version | default("None")) in ("None", "13.0"))
+      skip: (match(python, "<3.12")) or not linux or ppc64le or ((cuda_compiler_version | default("None")) in ("None", "13.0"))
       script:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
@@ -235,7 +233,7 @@ outputs:
         This package contains the highly modular framework for fast and accurate extreme mass ratio
         inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
         to the waveform generation.
-      license: GPL-3.0-or-later
+      license: MIT
       license_file: LICENSE
       homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
       repository: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
@@ -246,7 +244,7 @@ about:
   description: |
     This package contains the highly modular framework for fast and accurate extreme mass ratio
     inspiral (EMRI) waveforms.
-  license: GPL-3.0-or-later
+  license: MIT
   license_file: LICENSE
   homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
   repository: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
