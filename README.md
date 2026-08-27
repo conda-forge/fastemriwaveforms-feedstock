@@ -15,7 +15,7 @@ Summary: Blazingly fast EMRI waveforms
 
 Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
-Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.0.0/
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.1.0/
 
 This package contains the highly modular framework for fast and accurate extreme mass ratio
 inspiral (EMRI) waveforms. This is the core package with only CPU support
@@ -32,7 +32,7 @@ Summary: Blazingly fast EMRI waveforms
 
 Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
-Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.0.0/
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.1.0/
 
 This package contains the highly modular framework for fast and accurate extreme mass ratio
 inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
