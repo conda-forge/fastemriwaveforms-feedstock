@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: FastEMRIWaveforms
   version: 2.0.0
-  build: 12
+  build: 13
   RECIPE_DIR: ${{ env.get("RECIPE_DIR", default=".") }}
   cuda_major: ${{ env.get("cuda_compiler_version", default="0.0") | split(".") | first | int }}
   microarch_level: ${{ 1 if microarch_level is undefined else microarch_level | int }}
@@ -129,7 +129,20 @@ outputs:
       name: fastemriwaveforms-cuda12x
       version: ${{ version }}
     build:
-      skip: (match(python, "<3.10")) or (cuda_compiler_version in (None, 'None')) or not linux or ppc64le
+      # Note: the platform checks must come before the cuda_compiler_version
+      # check. On subdirs without CUDA support conda-smithy does not emit a
+      # cuda_compiler_version key at all, and referencing that undefined
+      # variant key makes rattler-build discard every later term of the `or`
+      # chain, so the output would no longer be skipped. The `default` filter
+      # keeps the check safe regardless of ordering.
+      #
+      # CUDA 13 is temporarily suppressed: FEW itself has no cuda13x backend
+      # yet (src/few/cutils/CMakeLists.txt derives the backend name from
+      # CUDAToolkit_VERSION_MAJOR, so a CUDA 13 build installs
+      # few_backend_cuda13x into a package named ...-cuda12x). Drop "13.0"
+      # from this list once a FEW release supports CUDA 13; see the
+      # fastemriwaveforms-cuda13x output that will need adding alongside it.
+      skip: (match(python, "<3.10")) or not linux or ppc64le or ((cuda_compiler_version | default("None")) in ("None", "13.0"))
       script:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
