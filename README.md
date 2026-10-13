@@ -15,7 +15,7 @@ Summary: Blazingly fast EMRI waveforms
 
 Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
-Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.1.0/
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.1.1/
 
 This package contains the highly modular framework for fast and accurate extreme mass ratio
 inspiral (EMRI) waveforms. This is the core package with only CPU support
@@ -32,7 +32,24 @@ Summary: Blazingly fast EMRI waveforms
 
 Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
-Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.1.0/
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.1.1/
+
+This package contains the highly modular framework for fast and accurate extreme mass ratio
+inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
+to the waveform generation.
+
+About fastemriwaveforms-cuda13x
+-------------------------------
+
+Home: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
+
+Package license: MIT
+
+Summary: Blazingly fast EMRI waveforms
+
+Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
+
+Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.1.1/
 
 This package contains the highly modular framework for fast and accurate extreme mass ratio
 inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
@@ -140,6 +157,7 @@ Current release info
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-fastemriwaveforms-green.svg)](https://anaconda.org/conda-forge/fastemriwaveforms) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/fastemriwaveforms.svg)](https://anaconda.org/conda-forge/fastemriwaveforms) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/fastemriwaveforms.svg)](https://anaconda.org/conda-forge/fastemriwaveforms) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/fastemriwaveforms.svg)](https://anaconda.org/conda-forge/fastemriwaveforms) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-fastemriwaveforms--cuda12x-green.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda12x) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/fastemriwaveforms-cuda12x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda12x) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/fastemriwaveforms-cuda12x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda12x) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/fastemriwaveforms-cuda12x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda12x) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-fastemriwaveforms--cuda13x-green.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda13x) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/fastemriwaveforms-cuda13x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda13x) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/fastemriwaveforms-cuda13x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda13x) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/fastemriwaveforms-cuda13x.svg)](https://anaconda.org/conda-forge/fastemriwaveforms-cuda13x) |
 
 Installing fastemriwaveforms
 ============================
@@ -158,7 +176,7 @@ How to use
 <summary>With conda</summary>
 
 ```
-conda install fastemriwaveforms fastemriwaveforms-cuda12x
+conda install fastemriwaveforms fastemriwaveforms-cuda12x fastemriwaveforms-cuda13x
 ```
 
 </details>
@@ -167,7 +185,7 @@ conda install fastemriwaveforms fastemriwaveforms-cuda12x
 <summary>With mamba</summary>
 
 ```
-mamba install fastemriwaveforms fastemriwaveforms-cuda12x
+mamba install fastemriwaveforms fastemriwaveforms-cuda12x fastemriwaveforms-cuda13x
 ```
 
 </details>
@@ -177,9 +195,9 @@ mamba install fastemriwaveforms fastemriwaveforms-cuda12x
 
 ```
 # for adding to your local project
-pixi add fastemriwaveforms fastemriwaveforms-cuda12x
+pixi add fastemriwaveforms fastemriwaveforms-cuda12x fastemriwaveforms-cuda13x
 # for installing globally
-pixi global install fastemriwaveforms fastemriwaveforms-cuda12x
+pixi global install fastemriwaveforms fastemriwaveforms-cuda12x fastemriwaveforms-cuda13x
 ```
 
 </details>
