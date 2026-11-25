@@ -4,10 +4,19 @@ context:
   name: FastEMRIWaveforms
   version: "2.2.1.post1"
   build: 0
-  RECIPE_DIR: ${{ env.get("RECIPE_DIR", default=".") }}
-  cuda_major: ${{ env.get("cuda_compiler_version", default="0.0") | split(".") | first | int }}
+  # CUDA major version of the current variant as a string ("12", "13"), or
+  # "None" on CPU-only variants (and on platforms where conda-smithy emits no
+  # cuda_compiler_version key at all, hence the `default`).
+  cuda_major: ${{ cuda_compiler_version | default("None") | split(".") | first }}
   microarch_level: ${{ 1 if microarch_level is undefined else microarch_level | int }}
-  build_with_microarch: ${{ build + (microarch_level * 100) | int }}
+  # Build number layout: <cuda_major><microarch_level><build:02d>, e.g.
+  #   cpu,    x86-64-v3, build 0 ->   300
+  #   cuda12, x86-64,    build 0 -> 12100
+  #   cuda13, x86-64,    build 0 -> 13100
+  # For a given version the solver prefers the highest build number, so it picks
+  # the newest CUDA build that the driver (__cuda) and any cuda-version pin
+  # allow, and falls back to the best CPU build the machine supports.
+  build_number: ${{ build + (microarch_level | int) * 100 + ((cuda_major | int) * 1000 if cuda_major != "None" else 0) }}
   microarch_option: ${{ ("-Ccmake.define.FEW_MARCH=x86-64-v" ~ microarch_level if (microarch_level | int) > 1 else "-Ccmake.define.FEW_MARCH=x86-64")  if (unix and x86_64) else "" }}
 
 recipe:
@@ -17,30 +26,42 @@ recipe:
 source:
   url: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms/archive/refs/tags/v${{ version }}.tar.gz
   sha256: 803155d4b2a7e516b5479fca7bae967fdaf2393a7ef73a9c38457720d1032930
-  patches:
-    - patches/01_few2.0_march.patch
-    - patches/02_few_display_cmake_options.patch
 
 build:
-  number: ${{ build_with_microarch }}
-  skip: (match(python, "<3.12"))
+  number: ${{ build_number }}
+  skip:
+    - match(python, "<3.12")
+    # The CUDA backend is only shipped for linux-64 and linux-aarch64
+    - cuda_major != "None" and (not linux or ppc64le)
+    # CUDA builds also contain the CPU backend, but are only built for the
+    # baseline microarch level to keep the CI matrix manageable
+    - cuda_major != "None" and microarch_level > 1
+    # FEW only provides backends for these CUDA major versions
+    - cuda_major not in ("None", "12", "13")
 
 outputs:
   - package:
       name: fastemriwaveforms
       version: ${{ version }}
     build:
-      skip: (match(python, "<3.12"))
+      number: ${{ build_number }}
+      # cpu_py312h<hash>_300, cuda12_py312h<hash>_12100, cuda13_py312h<hash>_13100
+      # so that `fastemriwaveforms=*=cpu*` / `=*=cuda12*` select a flavour.
+      string: ${{ ("cuda" ~ cuda_major if cuda_major != "None" else "cpu") }}_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
       script:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
         content:
-          - >-
-            ${{ PYTHON }} -m pip install . -vv
-            -Ccmake.define.FEW_LAPACKE_FETCH=OFF
-            -Ccmake.define.FEW_WITH_GPU=OFF
-            -Ccmake.define.FEW_LAPACKE_DETECT_WITH=PKGCONFIG
-            ${{ microarch_option }}
+          - if: cuda_major != "None"
+            then: >-
+              ${{ PYTHON }} -m pip install . -vv
+              -Ccmake.define.FEW_WITH_GPU=ON
+              -Ccmake.define.FEW_CUDA_ARCH="${CUDAARCHS:-all-major}"
+              ${{ microarch_option }}
+            else: >-
+              ${{ PYTHON }} -m pip install . -vv
+              -Ccmake.define.FEW_WITH_GPU=OFF
+              ${{ microarch_option }}
       python:
         entry_points:
           - few_citations = few.cmd.citations:main
@@ -54,15 +75,21 @@ outputs:
             - numpy
             - scikit-build-core
             - cython
-            - liblapacke
-            - libblas
-            - libtmglib
         - ${{ compiler('c') }}
         - ${{ stdlib('c') }}
         - ${{ compiler('cxx') }}
+        - if: cuda_major != "None"
+          then:
+            - ${{ compiler('cuda') }}
+            - if: build_platform != target_platform
+              then:
+                - cuda-version ${{ cuda_compiler_version }}.*
+                - cuda-driver-dev
+                - cuda-cudart-dev
+                - libcublas-dev
+                - libcusparse-dev
         - ninja
         - cmake
-        - pkg-config
         - make
         - if: unix and x86_64 and microarch_level < 4
           then: x86_64-microarch-level ${{ microarch_level }}.*
@@ -73,14 +100,17 @@ outputs:
         - setuptools_scm
         - cython
         - numpy
-        - liblapacke
-        - libblas
-        - libtmglib
+        - if: cuda_major != "None"
+          then:
+            - cuda-version ${{ cuda_compiler_version }}.*
+            - cuda-driver-dev
+            - cuda-cudart-dev
+            - libcublas-dev
+            - libcusparse-dev
       run:
         - python
         - h5py
         - jsonschema
-        - liblapacke
         - lisaconstants
         - multispline
         - numba
@@ -96,6 +126,25 @@ outputs:
         - wrapt
         - if: unix and x86_64 and microarch_level == 4
           then: _x86_64-microarch-level >=${{ microarch_level }}
+        - if: cuda_major != "None"
+          then:
+            # Only installable on machines with an NVIDIA driver new enough for
+            # this CUDA major; elsewhere the solver falls back to a cpu build.
+            - __cuda >=${{ cuda_major }}
+            - ${{ pin_compatible('cuda-version', lower_bound='x', upper_bound='x') }}
+            - cupy
+            - cuda-cudart
+            - libcublas
+            - libcusparse
+      ignore_run_exports:
+        from_package:
+          - if: cuda_major != "None"
+            then:
+              - ${{ compiler('cuda') }}
+              - cuda-driver-dev
+              - cuda-cudart-dev
+              - libcublas-dev
+              - libcusparse-dev
     tests:
       - if: microarch_level < 4
         then:
@@ -107,139 +156,57 @@ outputs:
           - requirements:
               run:
                 - pip
+                - if: cuda_major != "None"
+                  # libcuda stub, needed to load the CUDA backend without a GPU
+                  then: cuda-driver-dev
             script:
               - pip check
               - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms') == '${{ version }}'"
               - python -c "import few; few.get_backend('cpu')"
-              - python -m few.tests --disable testfile
-    about:
-      summary: Blazingly fast EMRI waveforms
-      description: |
-        This package contains the highly modular framework for fast and accurate extreme mass ratio
-        inspiral (EMRI) waveforms. This is the core package with only CPU support
-        for waveform generation.
-      license: MIT
-      license_file: LICENSE
-      homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
-      repository: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
-      documentation: https://fastemriwaveforms.readthedocs.io/en/v${{ version }}/
-  - package:
-      name: fastemriwaveforms-cuda12x
-      version: ${{ version }}
-    build:
-      # Note: the platform checks must come before the cuda_compiler_version
-      # check. On subdirs without CUDA support conda-smithy does not emit a
-      # cuda_compiler_version key at all, and referencing that undefined
-      # variant key makes rattler-build discard every later term of the `or`
-      # chain, so the output would no longer be skipped. The `default` filter
-      # keeps the check safe regardless of ordering.
-      #
-      # CUDA 13 is temporarily suppressed: FEW itself has no cuda13x backend
-      # yet (src/few/cutils/CMakeLists.txt derives the backend name from
-      # CUDAToolkit_VERSION_MAJOR, so a CUDA 13 build installs
-      # few_backend_cuda13x into a package named ...-cuda12x). The check is on
-      # the CUDA major version rather than an exact version string, because
-      # the global pinning moves between CUDA 13 minors (13.0 -> 13.4, ...).
-      # Once a FEW release supports CUDA 13, add a fastemriwaveforms-cuda13x
-      # output that skips unless the major version is "13".
-      skip: (match(python, "<3.12")) or not linux or ppc64le or ((cuda_compiler_version | default("None") | split(".") | first) != "12")
-      script:
-        env:
-          SETUPTOOLS_SCM_PRETEND_VERSION: ${{ version }}
-        content:
-          - sed -i'' -e '/@SKIP_PLUGIN@/d' pyproject.toml
-          - ${{ PYTHON }} ${{ RECIPE_DIR }}/update_name.py fastemriwaveforms-cuda12x
-          - >-
-            ${{ PYTHON }} -m pip install . -vv
-            -Ccmake.define.FEW_LAPACKE_FETCH=OFF
-            -Ccmake.define.FEW_WITH_GPU=ONLY
-            -Ccmake.define.FEW_CUDA_ARCH="${CUDAARCHS:-all-major}"
-            ${{ microarch_option }}
-    requirements:
-      build:
-        - ${{ compiler('c') }}
-        - ${{ stdlib('c') }}
-        - ${{ compiler('cxx') }}
-        - ${{ compiler('cuda') }}
-        - if: build_platform != target_platform
-          then:
-            - python
-            - cross-python_${{ target_platform }}
-            - scikit-build-core
-            - setuptools_scm
-            - cython
-            - numpy
-        - ninja
-        - cmake
-        - make
-        - if: build_platform != target_platform
-          then:
-            - if: cuda_major != 0
-              then: cuda-version ${{ cuda_compiler_version }}
-            - if: linux
-              then: cuda-driver-dev
-            - cuda-cudart-dev
-            - cuda-nvrtc-dev
-            - libcublas-dev
-            - libcusparse-dev
-            - tomli
-            - tomli-w
-      host:
-        - python
-        - pip
-        - scikit-build-core
-        - setuptools_scm
-        - cython
-        - numpy
-        - tomli
-        - tomli-w
-        - if: cuda_major != 0
-          then: cuda-version ${{ cuda_compiler_version }}
-        - cuda-driver-dev
-        - cuda-cudart-dev
-        - libcublas-dev
-        - libcusparse-dev
-      run:
-        - python
-        - ${{ pin_subpackage('fastemriwaveforms', lower_bound='x.x.x', upper_bound='x.x.x') }}
-        - ${{ pin_compatible('cuda-version', upper_bound='x', lower_bound='x') }}
-        - cupy
-        - cuda-cudart
-        - libcublas
-        - libcusparse
-      ignore_run_exports:
-        from_package:
-          - ${{ compiler('cuda') }}
-          - cuda-driver-dev
-          - cuda-cudart-dev
-          - cuda-nvrtc-dev
-          - libcublas-dev
-          - libcusparse-dev
-    tests:
-      - if: microarch_level < 4
-        then:
-          - python:
-              imports:
-                - few_backend_cuda12x
-          - requirements:
-              run:
-                - pip
-                - cuda-driver-dev
-            script:
-              - pip check
-              - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms-cuda12x') == '${{ version }}'"
+              - if: cuda_major != "None"
+                then: python -c "import few_backend_cuda${{ cuda_major }}x.pyinterp"
               - FEW_ENABLED_BACKENDS=cpu python -m few.tests --disable testfile
     about:
       summary: Blazingly fast EMRI waveforms
       description: |
         This package contains the highly modular framework for fast and accurate extreme mass ratio
-        inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
-        to the waveform generation.
+        inspiral (EMRI) waveforms.
+
+        Builds come in CPU-only (`cpu_*`) and CUDA (`cuda12_*`, `cuda13_*`) flavours. On a machine with
+        an NVIDIA driver the CUDA flavour is selected automatically; use e.g.
+        `conda install fastemriwaveforms cuda-version=12` or `conda install "fastemriwaveforms=*=cpu*"`
+        to choose explicitly.
       license: MIT
       license_file: LICENSE
       homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
       repository: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
       documentation: https://fastemriwaveforms.readthedocs.io/en/v${{ version }}/
+
+  # Transitional metapackage so that environments which installed the old
+  # fastemriwaveforms-cuda12x plugin upgrade cleanly to the CUDA 12 build of
+  # fastemriwaveforms. Drop this output after a release or two.
+  - package:
+      name: fastemriwaveforms-cuda12x
+      version: ${{ version }}
+    build:
+      number: ${{ build_number }}
+      skip: cuda_major != "12"
+    requirements:
+      run:
+        - ${{ pin_subpackage('fastemriwaveforms', exact=True) }}
+    tests:
+      - python:
+          imports:
+            - few
+          pip_check: false
+    about:
+      summary: Transitional package, use fastemriwaveforms instead
+      description: |
+        Deprecated: the CUDA 12 backend is now part of the `cuda12_*` builds of fastemriwaveforms.
+        This package only exists to upgrade environments that installed the former plugin.
+      license: MIT
+      license_file: LICENSE
+      homepage: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
 about:
   summary: Blazingly fast EMRI waveforms

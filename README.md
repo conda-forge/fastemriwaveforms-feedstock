@@ -18,8 +18,12 @@ Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.2.1.post1/
 
 This package contains the highly modular framework for fast and accurate extreme mass ratio
-inspiral (EMRI) waveforms. This is the core package with only CPU support
-for waveform generation.
+inspiral (EMRI) waveforms.
+
+Builds come in CPU-only (`cpu_*`) and CUDA (`cuda12_*`, `cuda13_*`) flavours. On a machine with
+an NVIDIA driver the CUDA flavour is selected automatically; use e.g.
+`conda install fastemriwaveforms cuda-version=12` or `conda install "fastemriwaveforms=*=cpu*"`
+to choose explicitly.
 
 About fastemriwaveforms-cuda12x
 -------------------------------
@@ -28,15 +32,14 @@ Home: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
 Package license: MIT
 
-Summary: Blazingly fast EMRI waveforms
+Summary: Transitional package, use fastemriwaveforms instead
 
 Development: https://github.com/BlackHolePerturbationToolkit/FastEMRIWaveforms
 
 Documentation: https://fastemriwaveforms.readthedocs.io/en/v2.2.1.post1/
 
-This package contains the highly modular framework for fast and accurate extreme mass ratio
-inspiral (EMRI) waveforms. This is the CUDA plugin package which adds GPU acceleration
-to the waveform generation.
+Deprecated: the CUDA 12 backend is now part of the `cuda12_*` builds of fastemriwaveforms.
+This package only exists to upgrade environments that installed the former plugin.
 
 Current build status
 ====================
@@ -84,6 +87,13 @@ Current build status
                 </a>
               </td>
             </tr><tr>
+              <td>osx_64_microarch_level1python3.15.____cp315</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_microarch_level1python3.15.____cp315" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
               <td>osx_64_microarch_level3python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
@@ -102,6 +112,13 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_microarch_level3python3.14.____cp314" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_microarch_level3python3.15.____cp315</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_microarch_level3python3.15.____cp315" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -126,6 +143,13 @@ Current build status
                 </a>
               </td>
             </tr><tr>
+              <td>osx_64_microarch_level4python3.15.____cp315</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_microarch_level4python3.15.____cp315" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
               <td>osx_arm64_python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
@@ -144,6 +168,13 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.14.____cp314" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_python3.15.____cp315</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26153&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/fastemriwaveforms-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.15.____cp315" alt="variant">
                 </a>
               </td>
             </tr>
