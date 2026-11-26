@@ -132,7 +132,9 @@ outputs:
             # this CUDA major; elsewhere the solver falls back to a cpu build.
             - __cuda >=${{ cuda_major }}
             - ${{ pin_compatible('cuda-version', lower_bound='x', upper_bound='x') }}
-            - cupy
+            # cupy 13.x caps numpy (<2.3) only in its pip metadata, so the
+            # solver can pair it with a newer numpy and `pip check` fails
+            - cupy >=14
             - cuda-cudart
             - libcublas
             - libcusparse
@@ -160,12 +162,17 @@ outputs:
                   # libcuda stub, needed to load the CUDA backend without a GPU
                   then: cuda-driver-dev
             script:
-              - pip check
-              - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms') == '${{ version }}'"
-              - python -c "import few; few.get_backend('cpu')"
-              - if: cuda_major != "None"
-                then: python -c "import few_backend_cuda${{ cuda_major }}x.pyinterp"
-              - FEW_ENABLED_BACKENDS=cpu python -m few.tests --disable testfile
+              # set via `env` rather than `VAR=value cmd`, which cmd.exe on
+              # Windows does not understand
+              env:
+                FEW_ENABLED_BACKENDS: cpu
+              content:
+                - pip check
+                - python -c "import importlib.metadata; assert importlib.metadata.version('fastemriwaveforms') == '${{ version }}'"
+                - python -c "import few; few.get_backend('cpu')"
+                - if: cuda_major != "None"
+                  then: python -c "import few_backend_cuda${{ cuda_major }}x.pyinterp"
+                - python -m few.tests --disable testfile
     about:
       summary: Blazingly fast EMRI waveforms
       description: |
